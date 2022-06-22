@@ -13,11 +13,13 @@ import GetPlaylistsAmountInLocalization from "./script_handlers/playlistsInLocal
 import GetPlaylistsIdsWithoutNameOrDesc from "./script_handlers/playlistsWithoutNameOrDesc.js";
 import { SongsInLabel, SongsInSubLabel } from "./script_handlers/songsLabelSublabel.js";
 import PlaylistWithYearOrDecadeInName from "./script_handlers/playlistWithYearOrDecade.js";
+import OpenSpotifyWithSong from "./script_handlers/openSpotify.js";
 
 const playlists: CategorizedPlaylists = JSON.parse(fs.readFileSync("categorizedPlaylists.json").toString());
 const songs: CategorizedSongs = JSON.parse(fs.readFileSync("categorizedSongs.json").toString());
 
 console.log(chalk.yellow(figlet.textSync("Script 2", { horizontalLayout: "full" })));
+
 program
   .command("mostpopularWords")
   .description("Most popular words with length >= 3, without one occuring words")
@@ -58,10 +60,15 @@ program
   .description("Amount of playlists with year or decade in name")
   .action(() => console.log(PlaylistWithYearOrDecadeInName(playlists)));
 
+program
+  .command("runSpotify")
+  .description("Open Spotify with you song")
+  .argument("<title>")
+  .action((arg1) => OpenSpotifyWithSong(arg1, songs));
+
 program.on("command:*", () => {
   console.error(chalk.red("Invalid command: ", program.args.join(" ")) + "\n");
   console.error(chalk.red("See --help for a list of available commands.") + "\n");
-
   process.exit(1);
 });
 
